@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
 
@@ -22,7 +23,7 @@ namespace CustomFramework.Utils
         public static List<Variance> DetailedCompare<T>(this T val1, T val2)
         {
             var variances = new List<Variance>();
-            var fi = val1.GetType().GetFields();
+            var fi = val1.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
             foreach (var f in fi)
             {
                 var v = new Variance();
@@ -33,6 +34,15 @@ namespace CustomFramework.Utils
                     variances.Add(v);
             }
             return variances;
+        }
+
+        public static IEnumerable<string> Split(string str, int charCount)
+        {
+            while (str.Length > 0)
+            {
+                yield return new string(str.Take(charCount).ToArray());
+                str = new string(str.Skip(charCount).ToArray());
+            }
         }
     }
 }
